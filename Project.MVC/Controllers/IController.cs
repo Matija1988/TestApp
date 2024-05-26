@@ -4,7 +4,7 @@ namespace Project.MVC.Controllers
 {
     public interface IController<TDI>
     {
-        Task<IActionResult> GetAll();
+       // Task<IActionResult> GetAll();
 
         Task<IActionResult> GetSingle(int id);
 
