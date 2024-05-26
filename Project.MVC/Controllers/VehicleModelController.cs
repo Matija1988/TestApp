@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client.Extensibility;
 using Project.MVC.Models;
 using Project.Service.Model;
@@ -14,23 +15,63 @@ namespace Project.MVC.Controllers
             VehicleModelDTORead,
             VehicleModelDTOInsert,
             VehicleModelDTOReadWithoutID> _vehicleModelService;
+
+        private readonly IVehicleService
+            <VehicleMake,
+            VehicleMakeDTORead,
+            VehicleMakeDTOInsert,
+            VehicleMakeDTOReadWithoutID> _vehicleMakeService;
         public VehicleModelController(IVehicleService
+            
             <VehicleModel,
             VehicleModelDTORead,
             VehicleModelDTOInsert,
-            VehicleModelDTOReadWithoutID> vehicleModelService)
+            VehicleModelDTOReadWithoutID> vehicleModelService,
+            
+            IVehicleService
+            <VehicleMake,
+            VehicleMakeDTORead,
+            VehicleMakeDTOInsert,
+            VehicleMakeDTOReadWithoutID> vehicleMakeService)
         {
             _vehicleModelService = vehicleModelService;
+            _vehicleMakeService = vehicleMakeService;
         }
 
-        public Task<IActionResult> CreateEntity(VehicleModelDTOInsert dto)
+
+        public async Task<IActionResult> CreateEntity()
         {
-            throw new NotImplementedException();
+            await PopulateDropdown();
+            return  View();
         }
 
-        public Task<IActionResult> DeleteEntity(int id)
+      
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEntity(VehicleModelDTOInsert dto)
         {
-            throw new NotImplementedException();
+            var response = await _vehicleModelService.CreateEntity(dto);
+
+            if(response.Success)
+            {
+                return RedirectToAction("Index");   
+            }
+
+            return StatusCode(StatusCodes.Status400BadRequest, response.Message);
+
+        }
+
+        public async Task<IActionResult> DeleteEntity(int id)
+        {
+            var response = await _vehicleModelService.DeleteEntity(id);
+
+            if(response.Success)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return BadRequest(response.Message);
+
         }
 
         public async Task<IActionResult> Index(string condition, string sortOrder, int pageNumber)
@@ -65,9 +106,41 @@ namespace Project.MVC.Controllers
 
         }
 
-        public Task<IActionResult> UpdateEntity(VehicleModelDTOInsert dto, int id)
+        [HttpGet]
+        public async Task<IActionResult> UpdateEntity(int id)
         {
-            throw new NotImplementedException();
+            var response = await _vehicleModelService.GetSingleEntity(id);
+
+            if (!response.Success)
+            {
+                return RedirectToAction("Index");   
+            }
+
+            
+            int makeId = response.Data.Maker;
+
+            var entityFromDb = new VehicleModelDTOInsert(
+                response.Data.Name, 
+                response.Data.Abrv, 
+                response.Data.Maker);
+            
+            await PopulateDropdown(makeId);
+            return View(entityFromDb);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateEntity(VehicleModelDTOInsert dto, int id)
+        {
+            var response = await _vehicleModelService.UpdateEntity(dto, id);
+
+            if(response.Success)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View();
+
         }
 
         private async Task<List<VehicleModelDTORead>> SortByAbrv(string sortOrder, List<VehicleModelDTORead> entityList)
@@ -100,6 +173,20 @@ namespace Project.MVC.Controllers
                 .ToList();
         }
 
+        private async Task PopulateDropdown()
+        {
+            var response = await _vehicleMakeService.GetAll();
+
+            ViewBag.VehicleMakerList = new SelectList(response.Data, "Id", "Abrv");
+
+        }
+
+        private async Task PopulateDropdown(int makeId)
+        {
+            var response = await _vehicleMakeService.GetAll();
+
+            ViewBag.VehicleMakerList = new SelectList(response.Data, "Id", "Abrv");
+        }
 
 
     }

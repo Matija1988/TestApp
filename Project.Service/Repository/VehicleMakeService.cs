@@ -14,13 +14,12 @@ namespace Project.Service.Repository
     {
         private readonly ApplicationDBContext _context;
 
-        private readonly IMapping _mapping; 
+        private readonly IMapping _mapping;
 
         public VehicleMakeService(ApplicationDBContext context, IMapping mapping)
         {
             _context = context;
             _mapping = mapping;
-
         }
         /// <summary>
         /// Stvara novi unos u bazu podataka putem ulaznog DTO
