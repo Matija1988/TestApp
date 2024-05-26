@@ -29,6 +29,12 @@ namespace Project.Service
                 VehicleMakeDTOInsert,
                 VehicleMakeDTOReadWithoutID>, VehicleMakeService>();
 
+            services.AddScoped<IVehicleService
+                <VehicleModel, 
+                VehicleModelDTORead, 
+                VehicleModelDTOInsert, 
+                VehicleModelDTOReadWithoutID>, VehicleModelService>();
+
             return services;
         }
     }

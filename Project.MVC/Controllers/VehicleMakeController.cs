@@ -23,25 +23,29 @@ namespace Project.MVC.Controllers
         }
 
 
-        [HttpGet]
         public async Task<IActionResult> Index(string condition, string sortOrder, int pageNumber)
         {
             var response = await _vehicleMakeService.GetAll();
 
-            var entityList = response.Data;
-
+            int pageSize = 10;
 
             if (response.Success)
             {
+                var  entityList = response.Data;
+
+                if(entityList is null)
+                {
+                    return NotFound();  
+                }
                 
-                if (condition is not null && condition.Length > 1)
+                if (condition is not null)
                 {
                     entityList = await Filter(condition, entityList);
+                    return View(await PaginatedListView<VehicleMakeDTORead>.Paginate(entityList, pageNumber, pageSize));
+
                 }
 
                 entityList = await SortByAbrv(sortOrder, entityList);
-
-                int pageSize = 10;
 
                 return View(await PaginatedListView<VehicleMakeDTORead>.Paginate(entityList, pageNumber, pageSize));
             }
@@ -49,39 +53,7 @@ namespace Project.MVC.Controllers
 
             return StatusCode(StatusCodes.Status503ServiceUnavailable, response.Message);
 
-
         }
-
-        private async Task<List<VehicleMakeDTORead>> SortByAbrv(string sortOrder, List<VehicleMakeDTORead> entityList)
-        {
-            ViewData["AbrvSortParam"] = string.IsNullOrEmpty(sortOrder) ? "abrv_desc" : "";
-
-            switch (sortOrder) 
-            {
-                case "abrv_desc":
-                    entityList = entityList.OrderByDescending(e => e.Abrv).ToList();
-                   break;
-
-                default:
-                    entityList = entityList.OrderBy(e => e.Abrv).ToList();
-                    break;
-
-            }
-
-            return entityList;
-        }
-
-        private async Task<List<VehicleMakeDTORead>> Filter(string condition, List<VehicleMakeDTORead> entityList)
-        {
-            condition = condition.ToLower();
-
-            return entityList = entityList.Where
-                (n => n.Abrv.ToLower().Contains(condition) 
-                || n.Name.ToLower().Contains(condition))
-                .OrderBy(n => n.Abrv)
-                .ToList();
-        }
-
 
 
         public IActionResult CreateEntity()
@@ -103,40 +75,20 @@ namespace Project.MVC.Controllers
 
         }
 
-        public Task<IActionResult> DeleteEntity(int id)
+        public async Task<IActionResult> DeleteEntity(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var response = await _vehicleMakeService.GetAll();
+           var response = await _vehicleMakeService.DeleteEntity(id);
 
             if(response.Success)
-            {
-                return Ok(response.Data);
+            { 
+                return RedirectToAction("Index"); 
             }
 
-            return NotFound(response.Message);
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, response.Message);
 
         }
 
-        public Task<IActionResult> GetPagination(int page, int byPage)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IActionResult> GetSingle(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        
-        public Task<IActionResult> SearchByNameOrAbrv(string condition)
-        {
-            throw new NotImplementedException();
-        }
+     
 
         [HttpGet]
         public async Task<IActionResult> UpdateEntity(int id)
@@ -151,10 +103,48 @@ namespace Project.MVC.Controllers
             return RedirectToAction("Index");   
         }
 
-        [HttpPut]
-        public Task<IActionResult> UpdateEntity(VehicleMakeDTOInsert dto, int id)
+        [HttpPost]
+        public async Task<IActionResult> UpdateEntity(VehicleMakeDTOInsert dto, int id)
         {
-            throw new NotImplementedException();
+            var response = await _vehicleMakeService.UpdateEntity(dto, id);
+
+            if(response.Success)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(StatusCode(StatusCodes.Status500InternalServerError, response.Message));
         }
+
+        private async Task<List<VehicleMakeDTORead>> SortByAbrv(string sortOrder, List<VehicleMakeDTORead> entityList)
+        {
+            ViewData["AbrvSortParam"] = string.IsNullOrEmpty(sortOrder) ? "abrv_desc" : "";
+
+            switch (sortOrder)
+            {
+                case "abrv_desc":
+                    entityList = entityList.OrderByDescending(e => e.Abrv).ToList();
+                    break;
+
+                default:
+                    entityList = entityList.OrderBy(e => e.Abrv).ToList();
+                    break;
+
+            }
+
+            return entityList;
+        }
+
+        private async Task<List<VehicleMakeDTORead>> Filter(string condition, List<VehicleMakeDTORead> entityList)
+        {
+            condition = condition.ToLower();
+
+            return entityList = entityList.Where
+                (n => n.Abrv.ToLower().Contains(condition)
+                || n.Name.ToLower().Contains(condition))
+                .OrderBy(n => n.Abrv)
+                .ToList();
+        }
+
     }
 }

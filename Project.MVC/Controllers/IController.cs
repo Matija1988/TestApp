@@ -4,9 +4,7 @@ namespace Project.MVC.Controllers
 {
     public interface IController<TDI>
     {
-       // Task<IActionResult> GetAll();
-
-        Task<IActionResult> GetSingle(int id);
+        Task<IActionResult> Index(string condition, string sortOrder, int pageNumber);
 
         Task<IActionResult> CreateEntity(TDI dto);
 
@@ -14,8 +12,5 @@ namespace Project.MVC.Controllers
 
         Task<IActionResult> DeleteEntity(int id);
 
-        Task<IActionResult> GetPagination(int page, int byPage);
-
-        Task<IActionResult> SearchByNameOrAbrv(string condition);
     }
 }
