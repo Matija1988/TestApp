@@ -2,6 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Project.Service.Data;
+using Project.Service.Mapping;
+using Project.Service.Model;
+using Project.Service.Repository;
 
 namespace Project.Service
 {
@@ -16,6 +19,15 @@ namespace Project.Service
                 ServiceLifetime.Scoped);
 
             services.AddScoped<IDBContext>(provider => provider.GetService<ApplicationDBContext>());
+
+            services.AddScoped<IMapping, MapperConfig>();
+
+            services.AddScoped
+                <IVehicleService
+                <VehicleMake,
+                VehicleMakeDTORead,
+                VehicleMakeDTOInsert,
+                VehicleMakeDTOReadWithoutID>, VehicleMakeService>();
 
             return services;
         }

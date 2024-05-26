@@ -1,0 +1,21 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Project.MVC.Controllers
+{
+    public interface IController<TDI>
+    {
+        Task<IActionResult> GetAll();
+
+        Task<IActionResult> GetSingle(int id);
+
+        Task<IActionResult> CreateEntity(TDI dto);
+
+        Task<IActionResult> UpdateEntity(TDI dto, int id);
+
+        Task<IActionResult> DeleteEntity(int id);
+
+        Task<IActionResult> GetPagination(int page, int byPage);
+
+        Task<IActionResult> SearchByNameOrAbrv(string condition);
+    }
+}
