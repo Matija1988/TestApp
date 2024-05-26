@@ -9,6 +9,12 @@ namespace Project.MVC.Controllers
         {
             
         }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         public Task<IActionResult> CreateEntity(VehicleMakeDTOInsert dto)
         {
             throw new NotImplementedException();
@@ -34,11 +40,7 @@ namespace Project.MVC.Controllers
             throw new NotImplementedException();
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+        
         public Task<IActionResult> SearchByNameOrAbrv(string condition)
         {
             throw new NotImplementedException();
