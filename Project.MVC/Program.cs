@@ -7,6 +7,50 @@ using Ninject;
 using Project.MVC;
 using Project.Service.Data;
 using Project.Service;
+using Microsoft.AspNetCore;
+
+
+//public class Program
+//{
+//    public static void Main(string[] args)
+//    {
+//        var hostConfiguration = new AspNetCoreHostConfiguration(args)
+//                .UseWebHostBuilder(CreateWebHostBuilder(args))
+//                .UseStartup<Startup>();
+
+//        var host = new NinjectSelfHostBootstrapper(CreateKernel, hostConfiguration);
+//        host.Start();
+//    }
+
+//    private static IWebHostBuilder CreateWebHostBuilder(string[] args)
+//    {
+//        return new DefaultWebHostConfiguration(args)
+//            .ConfigureContentRoot()
+//            .ConfigureAppSettings()
+//            .ConfigureLogging()
+//            .ConfigureAllowedHosts()
+//            .ConfigureForwardedHeaders()
+//            .ConfigureRouting()
+//            .GetBuilder();
+//    }
+
+//    public static IKernel CreateKernel()
+//    {
+//        var settings = new NinjectSettings();
+//        // Unfortunately, in .NET Core projects, referenced NuGet assemblies are not copied to the output directory
+//        // in a normal build which means that the automatic extension loading does not work _reliably_ and it is
+//        // much more reasonable to not rely on that and load everything explicitly.
+//        settings.LoadExtensions = false;
+
+//        var kernel = new AspNetCoreKernel(settings);
+
+//        kernel.Load(typeof(AspNetCoreHostConfiguration).Assembly);
+
+//        return kernel;
+//    }
+//}
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,18 +64,13 @@ builder.Services.Persistance(builder.Configuration);
 
 var app = builder.Build();
 
-//Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new NinjectServiceProviderFactory())
-//    .ConfigureWebHostDefaults(webBuilder =>
-//    {
-//        webBuilder.UseStartup<Startup>();
-//    });
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-app.UseExceptionHandler("/Home/Error");
-// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-app.UseHsts();
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -46,19 +85,3 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-
-//public partial class Program
-//{
-//    public static void Main(string[] args)
-//    {
-//        CreateHostBuilder(args).Build().Run();
-//    }
-
-//    public static IHostBuilder CreateHostBuilder(string[] args) =>
-//        Host.CreateDefaultBuilder(args)
-//            .UseServiceProviderFactory(new NinjectServiceProviderFactory())
-//            .ConfigureWebHostDefaults(webBuilder =>
-//            {
-//                webBuilder.UseStartup<Startup>();
-//            });
-//}

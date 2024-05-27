@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Project.Service.Mapping
 {
     public interface IMapping
-    {
+    { 
         Task<Mapper> VehicleMakerMapReadToDTO();
 
         Task<Mapper> VehicleMakerUpdateFromDTO();

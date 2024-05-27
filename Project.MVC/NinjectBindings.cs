@@ -11,13 +11,10 @@ namespace Project.MVC
         public override void Load()
         {
 
-            Bind<ApplicationDBContext>().ToSelf().InTransientScope();
-
             
-            Bind<IDBContext>().To<ApplicationDBContext>().InTransientScope();
+            //Bind<IDBContext>().To<ApplicationDBContext>().InTransientScope();
             //Bind<IMapping>().To<MapperConfiguration>();
-            ////   Bind<MapperConfiguration>().ToSelf();
-
+            
             //Bind<IVehicleService<VehicleMake, VehicleMakeDTORead, VehicleMakeDTOInsert, VehicleMakeDTOReadWithoutID>>()
             //    .To
             //    <VehicleMakeService>().InTransientScope();

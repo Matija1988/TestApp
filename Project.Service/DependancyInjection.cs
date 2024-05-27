@@ -18,8 +18,6 @@ namespace Project.Service
                 b => b.MigrationsAssembly(typeof(ApplicationDBContext).Assembly.FullName)), 
                 ServiceLifetime.Scoped);
 
-            services.AddScoped<IDBContext>(provider => provider.GetService<ApplicationDBContext>());
-
             services.AddScoped<IMapping, MapperConfig>();
 
             services.AddScoped
