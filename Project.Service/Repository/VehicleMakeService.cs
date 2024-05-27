@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Repository
 {
-    internal class VehicleMakeService : IVehicleService<VehicleMake, VehicleMakeDTORead, VehicleMakeDTOInsert, VehicleMakeDTOReadWithoutID>
+    public class VehicleMakeService : IVehicleService<VehicleMake, VehicleMakeDTORead, VehicleMakeDTOInsert, VehicleMakeDTOReadWithoutID>
     {
         private readonly ApplicationDBContext _context;
 
@@ -202,7 +202,9 @@ namespace Project.Service.Repository
         /// <returns></returns>
         private async Task<VehicleMakeDTOReadWithoutID> ReturnSingleDTORead(VehicleMake entity)
         {
-            var _mapper = await _mapping.VehicleMakerDataOfUpdatedEntity();
+            var mapper = new MapperConfig();
+
+            var _mapper = await mapper.VehicleMakerDataOfUpdatedEntity();
 
             return _mapper.Map<VehicleMakeDTOReadWithoutID>(entity);
         }
@@ -218,7 +220,10 @@ namespace Project.Service.Repository
         private async Task<List<VehicleMakeDTORead>> ReturnMappedList(List<VehicleMake> list)
         {
             var entityList = new List<VehicleMakeDTORead>();
-            var _mapper = await _mapping.VehicleMakerMapReadToDTO();
+
+            var mapper = new MapperConfig();
+
+            var _mapper = await mapper.VehicleMakerMapReadToDTO();
 
             foreach (var item in list)
             {

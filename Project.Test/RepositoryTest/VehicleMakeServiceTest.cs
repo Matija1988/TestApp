@@ -19,19 +19,10 @@ namespace Project.Test.RepositoryTest
             VehicleMakeDTOInsert, VehicleMakeDTOReadWithoutID> 
             _vehicleMakeService;
 
-        public VehicleMakeServiceTest(IVehicleService
-            <VehicleMake,
-            VehicleMakeDTORead,
-            VehicleMakeDTOInsert, VehicleMakeDTOReadWithoutID>
-            vehicleMakeService, IMapping mapping)
-        {
-            _mapping = mapping;
-            _vehicleMakeService = vehicleMakeService;
-        }
-
+        
         [Fact]
 
-        public async void VehicleMaker_Service_SeearchByNameOrAbrv_ReturnsTaskServiceResponseListVehicleMakeDTORead()
+        public async void VehicleMake_Service_SeearchByNameOrAbrv_ReturnsTaskServiceResponseListVehicleMakeDTORead()
         {
             var name = "Mitsubishi";
 
@@ -39,9 +30,14 @@ namespace Project.Test.RepositoryTest
 
             var mapper = _mapping;
 
-            var vehicleMakerRepo = new VehicleMakeService(dbContext, mapper);
+            var vehicleMakeService = new VehicleMakeService(dbContext, mapper);
 
-            var result = vehicleMakerRepo.SearchByNameOrAbrv(name);
+            var result = vehicleMakeService.SearchByNameOrAbrv(name);
+
+            if(result is null)
+            {
+                result.Should().BeNull();
+            }
 
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(Task<ServiceResponse<List<VehicleMakeDTORead>>>));
@@ -49,7 +45,7 @@ namespace Project.Test.RepositoryTest
         }
 
         [Fact]
-        public async void VehicleMaker_Service_GetSingleEntity_ReturnsTaskServiceResponseVehicleMakeDTORead()
+        public async void VehicleMake_Service_GetSingleEntity_ReturnsTaskServiceResponseVehicleMakeDTORead()
         {
             int id = 1;
 
@@ -77,8 +73,6 @@ namespace Project.Test.RepositoryTest
             var result = await vehicleMakeRepo.CreateEntity(makerDTOInsert);
 
             result.Should().NotBeNull();
-
-
         }
 
         [Fact]
