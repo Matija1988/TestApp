@@ -13,12 +13,6 @@ namespace Project.Test.RepositoryTest
     {
         private readonly IMapping _mapping;
 
-        private readonly IVehicleService
-            <VehicleMake, 
-            VehicleMakeDTORead, 
-            VehicleMakeDTOInsert, VehicleMakeDTOReadWithoutID> 
-            _vehicleMakeService;
-
         
         [Fact]
 
