@@ -193,7 +193,13 @@ namespace Project.Service.Repository
 
         }
 
-
+        /// <summary>
+        /// Stranicenje u backendu - NIJE IMPLEMENTIRANO - Stranicenje se izvrsava u frontendu
+        /// Pagination from backend - NOT IMPLEMENTED - Pagination done in frontend
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         private async Task<PaginatedView<VehicleModelDTORead>> Pagination(int pageIndex, int pageSize)
         {
             var _mapper = await _mapping.VehicleModelMapReadToDTO();

@@ -21,7 +21,14 @@ namespace Project.MVC.Controllers
         {
             _vehicleMakeService = vehicleMakeService;
         }
-
+        /// <summary>
+        /// Dohvacanje svih VehicleMake, strnicenje, filtriranje, sortiranje
+        /// Get all vehicleMake, pagination, filter, sort
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="sortOrder"></param>
+        /// <param name="pageNumber"></param>
+        /// <returns></returns>
 
         public async Task<IActionResult> Index(string condition, string sortOrder, int pageNumber)
         {
@@ -55,11 +62,21 @@ namespace Project.MVC.Controllers
 
         }
 
+        /// <summary>
+        /// View init for CreateEntity
+        /// </summary>
+        /// <returns></returns>
 
         public IActionResult CreateEntity()
         {
             return View();
         }
+
+        /// <summary>
+        /// Post data 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
 
         [HttpPost]
         public async Task<IActionResult> CreateEntity(VehicleMakeDTOInsert dto)

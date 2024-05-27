@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Model
 {
+    /// <summary>
+    /// POKO za VehicleModel
+    /// POCO for VehicleModel
+    /// </summary>
     public class VehicleModel
     {
         [Key]
